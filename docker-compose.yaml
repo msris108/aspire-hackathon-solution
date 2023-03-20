@@ -1,0 +1,101 @@
+version: '3.7'
+
+services:
+  elasticsearch:
+    image: elasticsearch:5.4
+    container_name: aspire_elasticsearch
+    volumes:
+      - type: volume
+        source: elasticsearch-data
+        target: /usr/share/elasticsearch/data/
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: kibana:5.4.3
+    container_name: aspire_kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: logstash:5.4.3
+    volumes:
+      - ./:/logstash_dir
+    command: logstash -f /logstash_dir/logstash.conf
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5959:5959"
+
+  backend:
+    container_name: backend
+    build:
+      context: ./aspire-backend
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticsearch
+      - kibana
+    ports:
+      - "8000:8000"
+    environment:
+      - LOGSTASH_HOST=logstash
+    expose:
+      - "5959"
+    logging:
+      driver: "json-file"
+    command: python ./manage.py runserver 0.0.0.0:8000
+
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./aspire-frontend/Dockerfile
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000/
+      - PORT=3001
+    ports:
+      - 3001:3001
+    stdin_open: true
+    tty: true
+    command: npm start --prefix ./aspire-frontend
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - prometheus-data:/prometheus
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+    restart: 'no'
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+
+volumes:
+  prometheus-data: {}
+  grafana-data: {}
+  elasticsearch-data: {}
+  logstash-data: {}
+  cache:
+    driver: local
