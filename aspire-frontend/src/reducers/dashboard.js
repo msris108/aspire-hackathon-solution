@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const URL = process.env.REACT_APP_BACKEND_URL;
 export const dashboard = createAsyncThunk("api/dashboard", async () => {
-  const response = await axios.get(URL + "api/");
+  const response = await axios.get(URL + "api/index/");
   console.log(response.data.message);
   return response.data;
 });

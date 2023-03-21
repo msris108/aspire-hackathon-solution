@@ -11,3 +11,4 @@ COPY . /app
 WORKDIR /app
 
 RUN python ./manage.py migrate
+RUN echo "Backend Docker Image Built Successfully"

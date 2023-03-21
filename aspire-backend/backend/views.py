@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def index(request):
     '''Health check, basic auth token'''
     logger.info('Health Check - ', str(request.user))
-    return Response({"message": "Hello, " + str(request.user)})
+    return Response({"message": "Hello there, " + str(request.user)})
 
 @api_view(['GET'])
 def getCurrentUser(request):

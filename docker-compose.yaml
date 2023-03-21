@@ -45,6 +45,7 @@ services:
       - LOGSTASH_HOST=logstash
     expose:
       - "5959"
+      - "3001"
     logging:
       driver: "json-file"
     command: python ./manage.py runserver 0.0.0.0:8000
@@ -61,7 +62,7 @@ services:
       - 3001:3001
     stdin_open: true
     tty: true
-    command: npm start --prefix ./aspire-frontend
+    command: npm start
 
   prometheus:
     image: prom/prometheus
