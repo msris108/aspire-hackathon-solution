@@ -72,7 +72,8 @@ db.sqlite3
 
 # production
 /build
-
+.env
+node_modules
 # misc
 .DS_Store
 .env.local
