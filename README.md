@@ -20,5 +20,7 @@
 
 > docker-compose -f docker-compose.yaml up
 
-In an ideal world everything would on running the above command, unfortunately we don't live in an ideal world :)  
+In an ideal world everything would start running with the above command, unfortunately we don't live in an ideal world :)  
+
+Check out localhost:3001/login for logging in _and_ localhost:8000/auth/email to get started
 
