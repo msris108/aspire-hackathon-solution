@@ -33,9 +33,7 @@ services:
 
   backend:
     container_name: backend
-    build:
-      context: ./aspire-backend
-      dockerfile: Dockerfile
+    image: asipire-backend
     depends_on:
       - elasticsearch
       - kibana
@@ -52,9 +50,7 @@ services:
 
   frontend:
     container_name: frontend
-    build:
-      context: .
-      dockerfile: ./aspire-frontend/Dockerfile
+    image: aspire-frontend
     environment:
       - REACT_APP_BACKEND_URL=http://backend:8000/
       - PORT=3001

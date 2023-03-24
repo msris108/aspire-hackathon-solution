@@ -8,8 +8,8 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
-COPY ./aspire-frontend/package.json ./
-COPY ./aspire-frontend/package-lock.json ./
+COPY ./package.json ./
+COPY ./package-lock.json ./
 RUN npm install --silent
 RUN npm install react-scripts@5.0.1 -g --silent
 
