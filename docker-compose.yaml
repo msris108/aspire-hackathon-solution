@@ -56,7 +56,7 @@ services:
       context: .
       dockerfile: ./aspire-frontend/Dockerfile
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:8000/
+      - REACT_APP_BACKEND_URL=http://backend:8000/
       - PORT=3001
     ports:
       - 3001:3001
